@@ -1,4 +1,4 @@
-module github.com/turbot/steampipe-plugin-scaleway
+module github.com/pdecat/steampipe-plugin-scaleway
 
 go 1.26.0
 
