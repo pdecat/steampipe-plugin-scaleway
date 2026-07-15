@@ -41,6 +41,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"scaleway_registry_image":          tableScalewayRegistryImage(ctx),
 			"scaleway_registry_namespace":      tableScalewayRegistryNamespace(ctx),
 			"scaleway_vpc_private_network":     tableScalewayVPCPrivateNetwork(ctx),
+			"scaleway_vpc_private_network_v2":  tableScalewayVPCPrivateNetworkV2(ctx),
 		},
 	}
 
