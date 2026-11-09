@@ -107,3 +107,31 @@ where
   state = 'running'
   and julianday('now') - julianday(creation_date) > 90;
 ```
+### List the public IPs of each instance server
+List every public IP attached to each server, IPv4 and IPv6 alike. The `public_ip` column only carries the first of them, so a server with several routed IPs needs `public_ips`.
+
+```sql+postgres
+select
+  s.name,
+  s.id,
+  ip ->> 'address' as address,
+  ip ->> 'family' as family,
+  ip ->> 'provisioning_mode' as provisioning_mode,
+  s.zone
+from
+  scaleway_instance_server as s,
+  jsonb_array_elements(s.public_ips) as ip;
+```
+
+```sql+sqlite
+select
+  s.name,
+  s.id,
+  json_extract(ip.value, '$.address') as address,
+  json_extract(ip.value, '$.family') as family,
+  json_extract(ip.value, '$.provisioning_mode') as provisioning_mode,
+  s.zone
+from
+  scaleway_instance_server as s,
+  json_each(s.public_ips) as ip;
+```
