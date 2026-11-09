@@ -134,6 +134,12 @@ func tableScalewayInstanceServer(_ context.Context) *plugin.Table {
 				Transform:   transform.FromField("PublicIP"),
 			},
 			{
+				Name:        "public_ips",
+				Description: "A list of the public IPs attached to the server, IPv4 and IPv6. public_ip only carries the first of them.",
+				Type:        proto.ColumnType_JSON,
+				Transform:   transform.FromField("PublicIPs"),
+			},
+			{
 				Name:        "location",
 				Description: "Specifies the server location.",
 				Type:        proto.ColumnType_JSON,
