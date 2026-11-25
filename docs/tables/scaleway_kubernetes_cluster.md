@@ -196,3 +196,28 @@ from
 where
   json_extract(auto_upgrade, '$.enabled') = 1;
 ```
+
+### Get the API endpoint and certificate authority of each cluster
+Collect what a kubeconfig needs to reach and trust each cluster's API server: the endpoint and the base64-encoded certificate authority, as `certificate-authority-data`. The certificate authority is read from the cluster kubeconfig, fetched with its admin token redacted, so it stays null when the credentials may not read the kubeconfig.
+
+```sql+postgres
+select
+  name,
+  id,
+  cluster_url,
+  certificate_authority,
+  region
+from
+  scaleway_kubernetes_cluster;
+```
+
+```sql+sqlite
+select
+  name,
+  id,
+  cluster_url,
+  certificate_authority,
+  region
+from
+  scaleway_kubernetes_cluster;
+```

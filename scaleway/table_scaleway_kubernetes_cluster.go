@@ -35,6 +35,14 @@ func tableScalewayKubernetesCluster(_ context.Context) *plugin.Table {
 			Hydrate:    getKubernetesCluster,
 			KeyColumns: plugin.AllColumns([]string{"id", "region"}),
 		},
+		HydrateConfig: []plugin.HydrateConfig{
+			{
+				Func: getKubernetesClusterCertificateAuthority,
+				// Credentials limited to read-only permission sets may be refused the kubeconfig,
+				// which must only leave the column null.
+				IgnoreConfig: &plugin.IgnoreConfig{ShouldIgnoreErrorFunc: shouldIgnoreKubeconfigError},
+			},
+		},
 		Columns: []*plugin.Column{
 			{
 				Name:        "name",
@@ -74,6 +82,13 @@ func tableScalewayKubernetesCluster(_ context.Context) *plugin.Table {
 				Description: "The Kubernetes API server URL of the cluster.",
 				Type:        proto.ColumnType_STRING,
 				Transform:   transform.FromField("ClusterURL"),
+			},
+			{
+				Name:        "certificate_authority",
+				Description: "Base64-encoded PEM certificate of the cluster certificate authority, as the certificate-authority-data of a kubeconfig. Read from the kubeconfig, fetched with its admin token redacted: null when the credentials may not read it.",
+				Type:        proto.ColumnType_STRING,
+				Hydrate:     getKubernetesClusterCertificateAuthority,
+				Transform:   transform.FromValue(),
 			},
 			{
 				Name:        "dns_wildcard",
