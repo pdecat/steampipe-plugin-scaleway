@@ -51,21 +51,21 @@ Find the addresses each Load Balancer listens on, for instance to set up DNS rec
 ```sql+postgres
 select
   l.name,
-  ip ->> 'ip_address' as ip_address,
-  ip ->> 'reverse' as reverse
+  lb_ip ->> 'ip_address' as ip_address,
+  lb_ip ->> 'reverse' as reverse
 from
   scaleway_lb as l,
-  jsonb_array_elements(l.ip) as ip;
+  jsonb_array_elements(l.ip) as lb_ip;
 ```
 
 ```sql+sqlite
 select
   l.name,
-  json_extract(ip.value, '$.ip_address') as ip_address,
-  json_extract(ip.value, '$.reverse') as reverse
+  json_extract(lb_ip.value, '$.ip_address') as ip_address,
+  json_extract(lb_ip.value, '$.reverse') as reverse
 from
   scaleway_lb as l,
-  json_each(l.ip) as ip;
+  json_each(l.ip) as lb_ip;
 ```
 
 ### List Load Balancers without any backend
